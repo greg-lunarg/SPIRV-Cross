@@ -313,8 +313,8 @@ string CompilerCPP::compile()
 	backend.double_literal_suffix = false;
 	backend.long_long_literal_suffix = true;
 	backend.uint32_t_literal_suffix = true;
-	backend.basic_int_type = "int32_t";
-	backend.basic_uint_type = "uint32_t";
+	backend.basic_int_type = "std::int32_t";
+	backend.basic_uint_type = "std::uint32_t";
 	backend.swizzle_is_function = true;
 	backend.shared_is_implied = true;
 	backend.flexible_member_array_supported = false;
