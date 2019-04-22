@@ -349,7 +349,7 @@ struct BaseShader : spirv_cross_shader
 
 struct FragmentResources
 {
-	internal::StageOutput<glm::vec4> gl_FragCoord;
+	internal::StageInput<glm::vec4> gl_FragCoord;
 	void init(spirv_cross_shader &s)
 	{
 		s.register_builtin(SPIRV_CROSS_BUILTIN_FRAG_COORD, gl_FragCoord);
