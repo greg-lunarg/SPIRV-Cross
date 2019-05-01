@@ -45,7 +45,7 @@ void spirv_cross_set_resource(spirv_cross_shader_t *thiz, unsigned set, unsigned
 const struct spirv_cross_interface *spirv_cross_get_interface(void);
 
 typedef enum spirv_cross_builtin {
-	SPIRV_CROSS_BUILTIN_POSITION = 0,
+	SPIRV_CROSS_BUILTIN_PERVERTEX = 0,
 	SPIRV_CROSS_BUILTIN_FRAG_COORD = 1,
 	SPIRV_CROSS_BUILTIN_WORK_GROUP_ID = 2,
 	SPIRV_CROSS_BUILTIN_NUM_WORK_GROUPS = 3,

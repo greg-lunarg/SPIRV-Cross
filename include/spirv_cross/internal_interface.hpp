@@ -375,14 +375,23 @@ struct FragmentShader : BaseShader<FragmentShader<T, Res>>
 	Res resources;
 };
 
+struct PerVertex {
+        glm::vec4 Position;
+        float PointSize;
+        float ClipDistance[1];
+        // float CullDistance[1];
+};
+
 struct VertexResources
 {
-	internal::StageOutput<glm::vec4> gl_Position;
+	internal::StageOutput<PerVertex> gl_PerVertex;
 	void init(spirv_cross_shader &s)
 	{
-		s.register_builtin(SPIRV_CROSS_BUILTIN_POSITION, gl_Position);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_PERVERTEX, gl_PerVertex);
 	}
-#define gl_Position __res->gl_Position.get()
+#define gl_Position __res->gl_PerVertex.get().Position
+#define gl_PointSize __res->gl_PerVertex.get().PointSize
+#define gl_ClipDistance __res->gl_PerVertex.get().ClipDistance
 };
 
 template <typename T, typename Res>
