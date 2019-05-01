@@ -385,13 +385,25 @@ struct PerVertex {
 struct VertexResources
 {
 	internal::StageInput<glm::int32_t> gl_VertexIndex;
+	internal::StageInput<glm::int32_t> gl_InstanceIndex;
+	internal::StageInput<glm::int32_t> gl_DrawIndex;
+	internal::StageInput<glm::int32_t> gl_BaseVertex;
+	internal::StageInput<glm::int32_t> gl_BaseInstance;
 	internal::StageOutput<PerVertex> gl_PerVertex;
 	void init(spirv_cross_shader &s)
 	{
 		s.register_builtin(SPIRV_CROSS_BUILTIN_VERTEX_INDEX, gl_VertexIndex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_INSTANCE_INDEX, gl_InstanceIndex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_DRAW_INDEX, gl_DrawIndex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_BASE_VERTEX, gl_BaseVertex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_BASE_INSTANCE, gl_BaseInstance);
 		s.register_builtin(SPIRV_CROSS_BUILTIN_PER_VERTEX, gl_PerVertex);
 	}
 #define gl_VertexIndex __res->gl_VertexIndex.get()
+#define gl_InstanceIndex __res->gl_InstanceIndex.get()
+#define gl_DrawIDARB __res->gl_DrawIndex.get()
+#define gl_BaseVertexARB __res->gl_BaseVertex.get()
+#define gl_BaseInstanceARB __res->gl_BaseInstance.get()
 #define gl_Position __res->gl_PerVertex.get().Position
 #define gl_PointSize __res->gl_PerVertex.get().PointSize
 #define gl_ClipDistance __res->gl_PerVertex.get().ClipDistance
