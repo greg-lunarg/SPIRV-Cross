@@ -384,11 +384,14 @@ struct PerVertex {
 
 struct VertexResources
 {
+	internal::StageInput<glm::int32_t> gl_VertexIndex;
 	internal::StageOutput<PerVertex> gl_PerVertex;
 	void init(spirv_cross_shader &s)
 	{
-		s.register_builtin(SPIRV_CROSS_BUILTIN_PERVERTEX, gl_PerVertex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_VERTEX_INDEX, gl_VertexIndex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_PER_VERTEX, gl_PerVertex);
 	}
+#define gl_VertexIndex __res->gl_VertexIndex.get()
 #define gl_Position __res->gl_PerVertex.get().Position
 #define gl_PointSize __res->gl_PerVertex.get().PointSize
 #define gl_ClipDistance __res->gl_PerVertex.get().ClipDistance
