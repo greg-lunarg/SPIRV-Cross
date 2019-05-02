@@ -350,11 +350,52 @@ struct BaseShader : spirv_cross_shader
 struct FragmentResources
 {
 	internal::StageInput<glm::vec4> gl_FragCoord;
+	internal::StageInput<glm::uint32_t> gl_FrontFacing;
+	internal::StageInput<float> gl_ClipDistance;
+	internal::StageInput<float> gl_CullDistance;
+	internal::StageInput<glm::vec2> gl_PointCoord;
+	internal::StageInput<glm::int32_t> gl_PrimitiveID;
+	internal::StageInput<glm::int32_t> gl_SampleID;
+	internal::StageInput<glm::vec2> gl_SamplePosition;
+	internal::StageInput<glm::int32_t> gl_SampleMaskIn;
+	internal::StageInput<glm::int32_t> gl_Layer;
+	internal::StageInput<glm::int32_t> gl_ViewportIndex;
+	internal::StageInput<glm::uint32_t> gl_HelperInvocation;
+	internal::StageOutput<float> gl_FragDepth;
+	internal::StageOutput<glm::int32_t> gl_SampleMask;
 	void init(spirv_cross_shader &s)
 	{
 		s.register_builtin(SPIRV_CROSS_BUILTIN_FRAG_COORD, gl_FragCoord);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_FRONT_FACING, gl_FrontFacing);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_CLIP_DISTANCE, gl_ClipDistance);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_CULL_DISTANCE, gl_CullDistance);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_POINT_COORD, gl_PointCoord);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_PRIMITIVE_ID, gl_PrimitiveID);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_SAMPLE_ID, gl_SampleID);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_SAMPLE_POS, gl_SamplePosition);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_SAMPLE_MASK_IN, gl_SampleMaskIn);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_LAYER, gl_Layer);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_VIEWPORT_IDX, gl_ViewportIndex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_HELPER_INV, gl_HelperInvocation);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_FRAG_DEPTH, gl_FragDepth);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_SAMPLE_MASK, gl_SampleMask);
 	}
+#ifdef SPIRV_CROSS_EXEC_FRAG
 #define gl_FragCoord __res->gl_FragCoord.get()
+#define gl_FrontFacing __res->gl_FrontFacing.get()
+#define gl_ClipDistance __res->gl_ClipDistance.get()
+#define gl_CullDistance __res->gl_CullDistance.get()
+#define gl_PointCoord __res->gl_PointCoord.get()
+#define gl_PrimitiveID __res->gl_PrimitiveID.get()
+#define gl_SampleID __res->gl_SampleID.get()
+#define gl_SamplePosition __res->gl_SamplePosition.get()
+#define gl_SampleMaskIn __res->gl_SampleMaskIn.get()
+#define gl_Layer __res->gl_Layer.get()
+#define gl_ViewportIndex __res->gl_ViewportIndex.get()
+#define gl_HelperInvocation __res->gl_HelperInvocation.get()
+#define gl_FragDepth __res->gl_FragDepth.get()
+#define gl_SampleMask __res->gl_SampleMask.get()
+#endif
 };
 
 template <typename T, typename Res>
@@ -393,12 +434,13 @@ struct VertexResources
 	void init(spirv_cross_shader &s)
 	{
 		s.register_builtin(SPIRV_CROSS_BUILTIN_VERTEX_INDEX, gl_VertexIndex);
-		s.register_builtin(SPIRV_CROSS_BUILTIN_INSTANCE_INDEX, gl_InstanceIndex);
+		s.register_builtin(SPIRV_CROSS_BUILTIN_INSTANCE_IDX, gl_InstanceIndex);
 		s.register_builtin(SPIRV_CROSS_BUILTIN_DRAW_INDEX, gl_DrawIndex);
 		s.register_builtin(SPIRV_CROSS_BUILTIN_BASE_VERTEX, gl_BaseVertex);
 		s.register_builtin(SPIRV_CROSS_BUILTIN_BASE_INSTANCE, gl_BaseInstance);
 		s.register_builtin(SPIRV_CROSS_BUILTIN_PER_VERTEX, gl_PerVertex);
 	}
+#ifdef SPIRV_CROSS_EXEC_VERT
 #define gl_VertexIndex __res->gl_VertexIndex.get()
 #define gl_InstanceIndex __res->gl_InstanceIndex.get()
 #define gl_DrawIDARB __res->gl_DrawIndex.get()
@@ -407,6 +449,7 @@ struct VertexResources
 #define gl_Position __res->gl_PerVertex.get().Position
 #define gl_PointSize __res->gl_PerVertex.get().PointSize
 #define gl_ClipDistance __res->gl_PerVertex.get().ClipDistance
+#endif
 };
 
 template <typename T, typename Res>
