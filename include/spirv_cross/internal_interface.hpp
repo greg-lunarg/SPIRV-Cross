@@ -351,18 +351,18 @@ struct FragmentResources
 {
 	internal::StageInput<glm::vec4> gl_FragCoord;
 	internal::StageInput<glm::uint32_t> gl_FrontFacing;
-	internal::StageInput<float> gl_ClipDistance;
-	internal::StageInput<float> gl_CullDistance;
+	internal::StageInput<float[1]> gl_ClipDistance;
+	internal::StageInput<float[1]> gl_CullDistance;
 	internal::StageInput<glm::vec2> gl_PointCoord;
 	internal::StageInput<glm::int32_t> gl_PrimitiveID;
 	internal::StageInput<glm::int32_t> gl_SampleID;
 	internal::StageInput<glm::vec2> gl_SamplePosition;
-	internal::StageInput<glm::int32_t> gl_SampleMaskIn;
+	internal::StageInput<glm::int32_t[1]> gl_SampleMaskIn;
 	internal::StageInput<glm::int32_t> gl_Layer;
 	internal::StageInput<glm::int32_t> gl_ViewportIndex;
 	internal::StageInput<glm::uint32_t> gl_HelperInvocation;
 	internal::StageOutput<float> gl_FragDepth;
-	internal::StageOutput<glm::int32_t> gl_SampleMask;
+	internal::StageOutput<glm::int32_t[1]> gl_SampleMask;
 	void init(spirv_cross_shader &s)
 	{
 		s.register_builtin(SPIRV_CROSS_BUILTIN_FRAG_COORD, gl_FragCoord);
