@@ -123,8 +123,8 @@ void CompilerCPP::emit_push_constant_block(const SPIRVariable &var)
 	auto buffer_name = to_name(type.self);
 	auto instance_name = to_name(var.self);
 
-	statement("internal::PushConstant<", buffer_name, type_to_array_glsl(type), "> ", instance_name, ";");
-	statement_no_indent("#define ", instance_name, " __res->", instance_name, ".get()");
+	statement("internal::PushConstant<", buffer_name, type_to_array_glsl(type), "> ", instance_name, "__;");
+	statement_no_indent("#define ", instance_name, " __res->", instance_name, "__.get()");
 	resource_registrations.push_back(join("s.register_push_constant(", instance_name, "__", ");"));
 	statement("");
 }
