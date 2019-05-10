@@ -22,6 +22,8 @@
 #define textureProj texture
 #define textureLod texture
 #define textureProjLod texture
+#define textureProjOffset textureOffset
+#define textureProjLodOffset textureLodOffset
 
 template <typename T>
 struct samplerBase
@@ -48,48 +50,167 @@ typedef samplerBase<float> sampler1DArrayShadow;
 typedef samplerBase<float> sampler2DArrayShadow;
 typedef samplerBase<float> samplerCubeArrayShadow;
 
+// Base functions
+//
 // The scalars s1 and s2 could be bias, lod or compare. For the purposes of
 // this module which just multiplies everything together, it doesn't matter
 // which is which.
 
-inline glm::vec4 texture(const samplerBase<glm::vec4> &samp, const glm::vec4 &uv, float s0, float s1)
+inline glm::vec4 textureOffset(const samplerBase<glm::vec4> &samp, const glm::vec4 &uv, const glm::ivec4 &offset, float s0, float s1)
 {
         glm::vec4 v = samp.data * uv;
+        v *= offset;
         v *= s0;
         v *= s1;
         return v;
 }
 
-inline float texture(const samplerBase<float> &samp, const glm::vec4 &uv, float s0, float s1)
+inline float textureOffset(const samplerBase<float> &samp, const glm::vec4 &uv, const glm::ivec4 &offset, float s0, float s1)
 {
         float v = samp.data * uv.x;
+        v *= offset.x;
         v *= s0;
         v *= s1;
         return v;
 }
 
+// texture
+
 template <typename T>
-inline T texture(const samplerBase<T> &samp, const glm::vec4 &uv, float s0 = 1.0f, float s1 = 1.0)
+inline T texture(const samplerBase<T> &samp, const glm::vec4 &uv, float s0 = 1.0f, float s1 = 1.0f)
 {
-	return texture(samp, uv, s0, s1);
+        ivec4 offset = ivec4(1);
+	return textureOffset(samp, uv, offset, s0, s1);
 }
 
 template <typename T>
-inline T texture(const samplerBase<T> &samp, const glm::vec3 &uv, float s0 = 1.0f, float s1 = 1.0)
+inline T texture(const samplerBase<T> &samp, const glm::vec3 &uv, float s0 = 1.0f, float s1 = 1.0f)
 {
-	return texture(samp, glm::vec4(uv, 1.0), s0, s1);
+	return texture(samp, glm::vec4(uv, 1.0f), s0, s1);
 }
 
 template <typename T>
-inline T texture(const samplerBase<T> &samp, const glm::vec2 &uv, float s0 = 1.0f, float s1 = 1.0)
+inline T texture(const samplerBase<T> &samp, const glm::vec2 &uv, float s0 = 1.0f, float s1 = 1.0f)
 {
-	return texture(samp, glm::vec4(uv, 1.0, 1.0), s0, s1);
+	return texture(samp, glm::vec4(uv, 1.0f, 1.0f), s0, s1);
 }
 
 template <typename T>
-inline T texture(const samplerBase<T> &samp, float &uv, float s0 = 1.0f, float s1 = 1.0)
+inline T texture(const samplerBase<T> &samp, float &uv, float s0 = 1.0f, float s1 = 1.0f)
 {
-	return texture(samp, glm::vec4(uv, 1.0 1.0, 1.0), s0, s1);
+	return texture(samp, glm::vec4(uv, 1.0f 1.0f, 1.0f), s0, s1);
+}
+
+// textureOffset
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec4 &uv, glm::ivec3 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, uv, glm::ivec4(offset, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec4 &uv, glm::ivec2 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, uv, glm::ivec4(offset, 1, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec4 &uv, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, uv, glm::ivec4(offset, 1, 1, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec3 &uv, glm::ivec3 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f), glm::ivec4(offset, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec3 &uv, glm::ivec2 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f), glm::ivec4(offset, 1, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec3 &uv, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f), glm::ivec4(offset, 1, 1, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec2 &uv, glm::ivec2 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f, 1.0f), glm::ivec4(offset, 1, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec2 &uv, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f, 1.0f), glm::ivec4(offset, 1, 1, 1), bias, 1.0f);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, float &uv, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f, 1.0f, 1.0f), glm::ivec4(offset, 1, 1, 1), bias, 1.0f);
+}
+
+// textureLodOffset
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec4 &uv, float lod, glm::ivec3 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, uv, glm::ivec4(offset, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec4 &uv, float lod, glm::ivec2 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, uv, glm::ivec4(offset, 1, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureOffset(const samplerBase<T> &samp, glm::vec4 &uv, float lod, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, uv, glm::ivec4(offset, 1, 1, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureLodOffset(const samplerBase<T> &samp, glm::vec3 &uv, float lod, glm::ivec3 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f), glm::ivec4(offset, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureLodOffset(const samplerBase<T> &samp, glm::vec3 &uv, float lod, glm::ivec2 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f), glm::ivec4(offset, 1, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureLodOffset(const samplerBase<T> &samp, glm::vec3 &uv, float lod, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f), glm::ivec4(offset, 1, 1, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureLodOffset(const samplerBase<T> &samp, glm::vec2 &uv, float lod, glm::ivec2 &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f, 1.0f), glm::ivec4(offset, 1, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureLodOffset(const samplerBase<T> &samp, glm::vec2 &uv, float lod, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f, 1.0f), glm::ivec4(offset, 1, 1, 1), bias, lod);
+}
+
+template <typename T>
+inline T textureLodOffset(const samplerBase<T> &samp, float &uv, float lod, int &offset, float bias = 1.0f)
+{
+	return textureOffset(samp, glm::vec4(uv, 1.0f, 1.0f, 1.0f), glm::ivec4(offset, 1, 1, 1), bias, lod);
 }
 
 #endif
