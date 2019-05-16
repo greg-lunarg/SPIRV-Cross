@@ -417,8 +417,9 @@ struct FragmentShader : BaseShader<FragmentShader<T, Res>>
 };
 
 struct PerVertex {
-        glm::vec4 Position;
-        float PointSize;
+        float Position;
+        // glm::vec4 Position;
+        // float PointSize;
         // float ClipDistance[1];
         // float CullDistance[1];
 };
@@ -446,9 +447,9 @@ struct VertexResources
 #define gl_DrawIDARB __res->gl_DrawIndex.get()
 #define gl_BaseVertexARB __res->gl_BaseVertex.get()
 #define gl_BaseInstanceARB __res->gl_BaseInstance.get()
-#define gl_Position __res->gl_PerVertex.get().Position
-#define gl_PointSize __res->gl_PerVertex.get().PointSize
-#define gl_ClipDistance (&__res->gl_PerVertex.get().PointSize+1)
+#define gl_Position (*reinterpret_cast<glm::vec4*>(&__res->gl_PerVertex.get().Position))
+#define gl_PointSize *(&__res->gl_PerVertex.get().Position+4)
+#define gl_ClipDistance (&__res->gl_PerVertex.get().Position+5)
 #endif
 };
 
